@@ -2,6 +2,7 @@
 // step1 요구사항 구현을 위한 전략
 // TODO 메뉴 추가
 // - [x] 메뉴의 이름을 입력 받고 엔터키 입력으로 추가한다.
+// - [x] 메뉴의 이름을 입력 받고 확인 버튼을 클릭하면 메뉴를 추가한다.
 // - [x] 추가되는 메뉴의 마크업은 `<ul id="espresso-menu-list" class="mt-3 pl-0"></ul>` 안에 삽입해야 한다.
 // - [x] 총 메뉴 갯수를 count하여 상단에 보여준다.
 // - [x] 메뉴가 추가되고 나면, input은 빈 값으로 초기화한다.
@@ -11,18 +12,15 @@
 const $ = (selector) => document.querySelector(selector);
 
 function App() {
-  // form 태그가 전송되는걸 막아준다.
+
   $("#espresso-menu-form").addEventListener("submit", (e) => {
-    e.preventDefault();
+    e.preventDefault();   // form 태그가 전송되는걸 막아준다.
   })
-  // 메뉴의 이름을 입력받는건
-  $('#espresso-menu-name').addEventListener("keypress", (e) => {
-    // 사용자가 처음 입력한 값이 Enter가 아닌 경우
-    if (e.key !== "Enter") {
-      return;
-    }
-    // 입력한 데이터가 빈 값일 경우
-    if ($('#espresso-menu-name').value === '') {
+
+  // 메뉴 이름 추가 공통 함수
+  const addMenuName = () => {
+
+    if ($('#espresso-menu-name').value === '') {   // 입력한 데이터가 빈 값일 경우
       alert('값을 입력해주세요.');
       return;
     }
@@ -30,20 +28,20 @@ function App() {
     const espressMenuName = $('#espresso-menu-name').value;
     const menuItemTemplate = (espressMenuName) => {
       return `<li class="menu-list-item d-flex items-center py-2">
-                <span class="w-100 pl-2 menu-name">${espressMenuName}</span>
-                <button
-                  type="button"
-                  class="bg-gray-50 text-gray-500 text-sm mr-1 menu-edit-button"
-                >
-                  수정
-                </button>
-                <button
-                  type="button"
-                  class="bg-gray-50 text-gray-500 text-sm menu-remove-button"
-                >
-                  삭제
-                </button>
-              </li>`;
+                    <span class="w-100 pl-2 menu-name">${espressMenuName}</span>
+                    <button
+                      type="button"
+                      class="bg-gray-50 text-gray-500 text-sm mr-1 menu-edit-button"
+                    >
+                      수정
+                    </button>
+                    <button
+                      type="button"
+                      class="bg-gray-50 text-gray-500 text-sm menu-remove-button"
+                    >
+                      삭제
+                    </button>
+                  </li>`;
     };
     // innerHTML
     // $('#espresso-menu-list').innerHTML = (menuItemTemplate(espressMenuName));
@@ -54,9 +52,21 @@ function App() {
     const menuCount = $('#espresso-menu-list').querySelectorAll('li').length;
     $('.menu-count').innerText = `총 ${menuCount}개`
 
-    // 추가 후 input 초기화
-    $('#espresso-menu-name').value = '';
+    $('#espresso-menu-name').value = '';     // 추가 후 input 초기화
 
+  }
+
+  // 확인 버튼 클릭 시
+  $('#espresso-menu-submit-button').addEventListener('click', () => {
+    addMenuName();
+  })
+
+  // Enter 입력 시
+  $('#espresso-menu-name').addEventListener("keypress", (e) => {
+    if (e.key !== "Enter") { // 사용자가 처음 입력한 값 Enter 체크
+      return;
+    }
+    addMenuName();
   });
 }
 
