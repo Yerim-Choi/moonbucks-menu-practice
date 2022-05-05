@@ -59,6 +59,7 @@ const store = {
 
 function App() {
   // 상태는 변하는 데이터, 이 앱에서 변하는 것이 무엇인가 - 메뉴명
+  this.menu = [];
 
   // 메뉴 총 개수 업데이트 함수
   const updatedMenuCount = () => {
@@ -75,27 +76,50 @@ function App() {
     }
 
     const espressMenuName = $('#espresso-menu-name').value;
-    const menuItemTemplate = (espressMenuName) => {
+    this.menu.push({ name: espressMenuName });
+    store.setLocalStorage(this.menu); // localStorage 저장
+
+    const template = this.menu.map((menuItem) => {
       return `<li class="menu-list-item d-flex items-center py-2">
-                    <span class="w-100 pl-2 menu-name">${espressMenuName}</span>
-                    <button
-                      type="button"
-                      class="bg-gray-50 text-gray-500 text-sm mr-1 menu-edit-button"
-                    >
-                      수정
-                    </button>
-                    <button
-                      type="button"
-                      class="bg-gray-50 text-gray-500 text-sm menu-remove-button"
-                    >
-                      삭제
-                    </button>
-                  </li>`;
-    };
+      <span class="w-100 pl-2 menu-name">${menuItem.name}</span>
+      <button
+        type="button"
+        class="bg-gray-50 text-gray-500 text-sm mr-1 menu-edit-button"
+      >
+        수정
+      </button>
+      <button
+        type="button"
+        class="bg-gray-50 text-gray-500 text-sm menu-remove-button"
+      >
+        삭제
+      </button>
+    </li>`;
+    }).join("");
+
+    // const menuItemTemplate = (espressMenuName) => {
+    //   return `<li class="menu-list-item d-flex items-center py-2">
+    //                 <span class="w-100 pl-2 menu-name">${espressMenuName}</span>
+    //                 <button
+    //                   type="button"
+    //                   class="bg-gray-50 text-gray-500 text-sm mr-1 menu-edit-button"
+    //                 >
+    //                   수정
+    //                 </button>
+    //                 <button
+    //                   type="button"
+    //                   class="bg-gray-50 text-gray-500 text-sm menu-remove-button"
+    //                 >
+    //                   삭제
+    //                 </button>
+    //               </li>`;
+    // };
     // innerHTML
     // $('#espresso-menu-list').innerHTML = (menuItemTemplate(espressMenuName));
     // insertAdjacentHTML
-    $('#espresso-menu-list').insertAdjacentHTML("beforeend", menuItemTemplate(espressMenuName));
+    // $('#espresso-menu-list').insertAdjacentHTML("beforeend", menuItemTemplate(espressMenuName));
+
+    $('#espresso-menu-list').innerHTML = template;
 
     updatedMenuCount();
     $('#espresso-menu-name').value = ''; // 추가 후 input 초기화
@@ -145,6 +169,6 @@ function App() {
   });
 }
 
-App();
+const app = new App();
 
 
