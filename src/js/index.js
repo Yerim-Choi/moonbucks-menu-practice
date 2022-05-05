@@ -25,6 +25,9 @@
 //  step2 요구사항 - 상태 관리로 메뉴 관리하기
 // TODO localStorage Read & Write
 // - [ ] localStorage에 데이터를 저장한다.
+//  - [x] 메뉴를 추가할 때
+//  - [x] 메뉴를 수정할 때
+//  - [ ] 메뉴를 삭제할 때
 // - [ ] localStorage에 있는 데이터를 읽어온다.
 
 // TODO 카테고리 별 메뉴판 관리
@@ -59,7 +62,7 @@ const store = {
 
 function App() {
   // 상태는 변하는 데이터, 이 앱에서 변하는 것이 무엇인가 - 메뉴명
-  this.menu = [];
+  this.menu = []; // 초기화
 
   // 메뉴 총 개수 업데이트 함수
   const updatedMenuCount = () => {
@@ -79,8 +82,8 @@ function App() {
     this.menu.push({ name: espressMenuName });
     store.setLocalStorage(this.menu); // localStorage 저장
 
-    const template = this.menu.map((menuItem) => {
-      return `<li class="menu-list-item d-flex items-center py-2">
+    const template = this.menu.map((menuItem, index) => {
+      return `<li data-menu-id="${index}" class="menu-list-item d-flex items-center py-2">
       <span class="w-100 pl-2 menu-name">${menuItem.name}</span>
       <button
         type="button"
@@ -128,11 +131,11 @@ function App() {
 
   // 메뉴 수정 함수
   const updateMenuName = (e) => {
+    const menuId = e.target.closest('li').dataset.menuId;
     const $menuName = e.target.closest('li').querySelector('.menu-name');
-    const updatedMenuName = prompt(
-      '메뉴명을 수정하세요',
-      $menuName.innerText
-    );
+    const updatedMenuName = prompt('메뉴명을 수정하세요', $menuName.innerText);
+    this.menu[menuId].name = updatedMenuName;
+    store.setLocalStorage(this.menu)
     $menuName.innerText = updatedMenuName;
   }
 
