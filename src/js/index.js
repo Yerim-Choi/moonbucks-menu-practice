@@ -27,8 +27,8 @@
 // - [ ] localStorage에 데이터를 저장한다.
 //  - [x] 메뉴를 추가할 때
 //  - [x] 메뉴를 수정할 때
-//  - [ ] 메뉴를 삭제할 때
-// - [ ] localStorage에 있는 데이터를 읽어온다.
+//  - [x] 메뉴를 삭제할 때
+// - [x] localStorage에 있는 데이터를 읽어온다.
 
 // TODO 카테고리 별 메뉴판 관리
 // - [ ] 에스프레소 메뉴판 관리
@@ -139,8 +139,12 @@ function App() {
     $menuName.innerText = updatedMenuName;
   }
 
+  // 메뉴 삭제 함수
   const removeMenuName = (e) => {
     if (confirm('정말 삭제하시겠습니까?')) {
+      const menuId = e.target.closest('li').dataset.menuId;
+      this.menu.splice(menuId, 1);
+      store.setLocalStorage(this.menu)
       e.target.closest('li').remove();
       updatedMenuCount();
     }
