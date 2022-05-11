@@ -52,10 +52,10 @@ const $ = (selector) => document.querySelector(selector);
 
 const store = {
   setLocalStorage(menu) {
-    localStorage.setItem("menu", JSON.stringify(menu));
+    localStorage.setItem('menu', JSON.stringify(menu));
   },
   getLocalStorage() {
-    localStorage.getItem("menu");
+    return JSON.parse(localStorage.getItem('menu'));
   }
 }
 
@@ -63,24 +63,14 @@ const store = {
 function App() {
   // 상태는 변하는 데이터, 이 앱에서 변하는 것이 무엇인가 - 메뉴명
   this.menu = []; // 초기화
-
-  // 메뉴 총 개수 업데이트 함수
-  const updatedMenuCount = () => {
-    const menuCount = $('#espresso-menu-list').querySelectorAll('li').length;
-    $('.menu-count').innerText = `총 ${menuCount}개`
-  }
-
-  // 메뉴 이름 추가 함수
-  const addMenuName = () => {
-
-    if ($('#espresso-menu-name').value === '') { // 입력한 데이터가 빈 값일 경우
-      alert('값을 입력해주세요.');
-      return;
+  this.init = () => {
+    if (store.getLocalStorage().length > 1) {
+      this.menu = store.getLocalStorage();
     }
+    render();
+  };
 
-    const espressMenuName = $('#espresso-menu-name').value;
-    this.menu.push({ name: espressMenuName });
-    store.setLocalStorage(this.menu); // localStorage 저장
+  const render = () => {
 
     const template = this.menu.map((menuItem, index) => {
       return `<li data-menu-id="${index}" class="menu-list-item d-flex items-center py-2">
@@ -100,31 +90,29 @@ function App() {
     </li>`;
     }).join("");
 
-    // const menuItemTemplate = (espressMenuName) => {
-    //   return `<li class="menu-list-item d-flex items-center py-2">
-    //                 <span class="w-100 pl-2 menu-name">${espressMenuName}</span>
-    //                 <button
-    //                   type="button"
-    //                   class="bg-gray-50 text-gray-500 text-sm mr-1 menu-edit-button"
-    //                 >
-    //                   수정
-    //                 </button>
-    //                 <button
-    //                   type="button"
-    //                   class="bg-gray-50 text-gray-500 text-sm menu-remove-button"
-    //                 >
-    //                   삭제
-    //                 </button>
-    //               </li>`;
-    // };
-    // innerHTML
-    // $('#espresso-menu-list').innerHTML = (menuItemTemplate(espressMenuName));
-    // insertAdjacentHTML
-    // $('#espresso-menu-list').insertAdjacentHTML("beforeend", menuItemTemplate(espressMenuName));
-
     $('#espresso-menu-list').innerHTML = template;
-
     updatedMenuCount();
+
+  };
+
+  // 메뉴 총 개수 업데이트 함수
+  const updatedMenuCount = () => {
+    const menuCount = $('#espresso-menu-list').querySelectorAll('li').length;
+    $('.menu-count').innerText = `총 ${menuCount}개`
+  }
+
+  // 메뉴 이름 추가 함수
+  const addMenuName = () => {
+
+    if ($('#espresso-menu-name').value === '') { // 입력한 데이터가 빈 값일 경우
+      alert('값을 입력해주세요.');
+      return;
+    }
+
+    const espressMenuName = $('#espresso-menu-name').value;
+    this.menu.push({ name: espressMenuName });
+    store.setLocalStorage(this.menu); // localStorage 저장
+    render();
     $('#espresso-menu-name').value = ''; // 추가 후 input 초기화
 
   }
@@ -177,5 +165,5 @@ function App() {
 }
 
 const app = new App();
-
+app.init();
 
