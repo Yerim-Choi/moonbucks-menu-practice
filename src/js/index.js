@@ -24,14 +24,14 @@
 
 //  step2 요구사항 - 상태 관리로 메뉴 관리하기
 // TODO localStorage Read & Write
-// - [ ] localStorage에 데이터를 저장한다.
+// - [x] localStorage에 데이터를 저장한다.
 //  - [x] 메뉴를 추가할 때
 //  - [x] 메뉴를 수정할 때
 //  - [x] 메뉴를 삭제할 때
 // - [x] localStorage에 있는 데이터를 읽어온다.
 
 // TODO 카테고리 별 메뉴판 관리
-// - [ ] 에스프레소 메뉴판 관리
+// - [x] 에스프레소 메뉴판 관리
 // - [ ] 프라푸치노 메뉴판 관리
 // - [ ] 블렌디드 메뉴판 관리
 // - [ ] 티바나 메뉴판 관리
@@ -62,9 +62,16 @@ const store = {
 
 function App() {
   // 상태는 변하는 데이터, 이 앱에서 변하는 것이 무엇인가 - 메뉴명
-  this.menu = []; // 초기화
+  this.menu = {
+    espresso: [],
+    frappuccino: [],
+    blended: [],
+    teavana: [],
+    desert: [],
+  }; // 초기화
+  this.currentCategory = 'espresso';
   this.init = () => {
-    if (store.getLocalStorage().length > 1) {
+    if (store.getLocalStorage()) {
       this.menu = store.getLocalStorage();
     }
     render();
@@ -72,7 +79,7 @@ function App() {
 
   const render = () => {
 
-    const template = this.menu.map((menuItem, index) => {
+    const template = this.menu[this.currentCategory].map((menuItem, index) => {
       return `<li data-menu-id="${index}" class="menu-list-item d-flex items-center py-2">
       <span class="w-100 pl-2 menu-name">${menuItem.name}</span>
       <button
@@ -110,7 +117,7 @@ function App() {
     }
 
     const espressMenuName = $('#espresso-menu-name').value;
-    this.menu.push({ name: espressMenuName });
+    this.menu[this.currentCategory].push({ name: espressMenuName });
     store.setLocalStorage(this.menu); // localStorage 저장
     render();
     $('#espresso-menu-name').value = ''; // 추가 후 input 초기화
@@ -162,6 +169,13 @@ function App() {
     }
     addMenuName();
   });
+
+  $('nav').addEventListener('click', (e) => {
+    const isCategoryButton = e.target.classList.contains('cafe-category-name')
+    if (isCategoryButton) {
+      const categoryName = e.target.dataset.categoryName;
+    }
+  })
 }
 
 const app = new App();
