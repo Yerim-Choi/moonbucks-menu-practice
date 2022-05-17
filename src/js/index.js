@@ -56,7 +56,7 @@ import store from './store/index.js'
 
 // step3
 // TODO 서버 요청 부분
-// - [] 웹 서버를 띄운다.
+// - [x} 웹 서버를 띄운다.
 // - [] 서버에 새로운 메뉴명을 추가될 수 있도록 요청한다.
 // - [] 서버에 카테고리별 메뉴리스트를 불러온다.
 // - [] 서버에 메뉴가 수정 될 수 있도록 요청한다.
@@ -72,6 +72,7 @@ import store from './store/index.js'
 // - [] 중복되는 메뉴는 추가할 수 없다.
 
 
+const BASE_URL = "http://localhost:3000/api"
 
 function App() {
   // 상태는 변하는 데이터, 이 앱에서 변하는 것이 무엇인가 - 메뉴명
@@ -135,9 +136,21 @@ function App() {
       alert('값을 입력해주세요.');
       return;
     }
+    const menuName = $('#menu-name').value;
 
-    const espressMenuName = $('#menu-name').value;
-    this.menu[this.currentCategory].push({ name: espressMenuName });
+    fetch(`${BASE_URL}/category/${this.currentCategory}/menu`, {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name: menuName }),
+    }).then((response) => {
+      return response.json();
+    }).then((data) => {
+      console.log(data)
+    });
+
+    // this.menu[this.currentCategory].push({ name: menuName });
     store.setLocalStorage(this.menu); // localStorage 저장
     render();
     $('#menu-name').value = ''; // 추가 후 input 초기화
