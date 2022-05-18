@@ -130,7 +130,7 @@ function App() {
   }
 
   // 메뉴 이름 추가 함수
-  const addMenuName = () => {
+  const addMenuName = async () => {
 
     if ($('#menu-name').value === '') { // 입력한 데이터가 빈 값일 경우
       alert('값을 입력해주세요.');
@@ -138,7 +138,7 @@ function App() {
     }
     const menuName = $('#menu-name').value;
 
-    fetch(`${BASE_URL}/category/${this.currentCategory}/menu`, {
+    await fetch(`${BASE_URL}/category/${this.currentCategory}/menu`, {
       method: 'POST',
       headers: {
         "Content-Type": "application/json",
@@ -146,14 +146,20 @@ function App() {
       body: JSON.stringify({ name: menuName }),
     }).then((response) => {
       return response.json();
-    }).then((data) => {
-      console.log(data)
     });
 
+
+    await fetch(`${BASE_URL}/category/${this.currentCategory}/menu`)
+      .then((response) => {
+        return response.json();
+      }).then((data) => {
+        this.menu[this.currentCategory] = data;
+        render();
+        $('#menu-name').value = ''; // 추가 후 input 초기화
+      });
+
     // this.menu[this.currentCategory].push({ name: menuName });
-    store.setLocalStorage(this.menu); // localStorage 저장
-    render();
-    $('#menu-name').value = ''; // 추가 후 input 초기화
+    // store.setLocalStorage(this.menu); // localStorage 저장
 
   }
 
