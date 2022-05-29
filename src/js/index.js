@@ -83,6 +83,13 @@ import MenuApi from "./api/index.js";
 // - [x] API 통신이 실패하는 경우에 대해 사용자가 알 수 있게 alert으로 예외처리를 진행한다.
 // - [x] 중복되는 메뉴는 추가할 수 없다.
 
+// Next Step
+// 화이트존/그레이존/블랙존
+// 피드백의 중요성
+// - 다른 사람의 코드 읽기 (Pull Request)
+// - 코드리뷰
+// - 스터디
+
 function App() {
   // 상태는 변하는 데이터, 이 앱에서 변하는 것이 무엇인가 - 메뉴명
   this.menu = {
